@@ -9,7 +9,7 @@
 	},
 	{
 		"model": "courses.subject",
-		"pk": 1,
+		"pk": 2,
 		"fields": {
 			"title": "Physics",
 			"slug": "physics"
@@ -17,7 +17,7 @@
 	},
 	{
 		"model": "courses.subject",
-		"pk": 1,
+		"pk": 3,
 		"fields": {
 			"title": "Programming",
 			"slug": "programming"
@@ -25,7 +25,7 @@
 	},
 	{
 		"model": "courses.subject",
-		"pk": 1,
+		"pk": 4,
 		"fields": {
 			"title": "Chemistry",
 			"slug": "chemistry"
