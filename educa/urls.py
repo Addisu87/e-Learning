@@ -25,6 +25,8 @@ urlpatterns = [
     path('', include('core.courses.urls'))
 ]
 
+# the static() helper function to serve media files with the
+# Django development server during development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
