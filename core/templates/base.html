@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Educa{% endblock %}</title>
+    <!-- CSS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/creativetimofficial/tailwind-starter-kit/compiled-tailwind.min.css" rel="stylesheet">
+</head>
+<body class="text-gray-800 antialiased">
+    <!-- Navigation -->
+    <nav class="top-0 absolute z-50 w-full flex items-center justify-between px-2 py-3 bg-blue-600 text-white">
+        <div class="container px-4 mx-auto flex items-center justify-between">
+            <a href="/">
+                <div class="flex items-center justify-center space-x-4" >
+                    <img src="{% static 'img/education.png' %}" alt="education logo" class="h-8 w-8">
+                        <span class="text-sm font-bold leading-relaxed py-2 whitespace-nowrap uppercase">Educa</span>
+                    </div>
+            </a>
+            <div class="flex lg:hidden">
+                <button class="text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block focus:outline-none" type="button" onclick="toggleNavbar('example-collapse-navbar')">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div class="hidden lg:flex flex-grow items-center justify-end" id="example-collapse-navbar">
+      
+                <ul class="flex flex-col lg:flex-row list-none lg:ml-auto">
+                    <li class="flex items-center">
+                        <a class="lg:text-white lg:hover:text-gray-300 text-gray-800 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold" href="#pablo">
+                            <i class="fab fa-facebook text-lg leading-lg mr-2"></i>
+                            <span class="text-base">Courses</span>
+                        </a>
+                    </li>
+                </ul>
+
+                {% if request.user.is_authenticated %}
+                    <form action="{% url "logout" %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none">Sign out</button>
+                    </form>
+                {% else %}
+                    <a href="{% url "login" %}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none">Sign in</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex flex-col justify-center h-screen p-4">
+        <section class="absolute w-full h-full">
+            <div class="container mx-auto px-4 h-full">
+                <div class="flex content-center items-center justify-center h-full">
+                        {% block content %}
+
+                        {% endblock %}
+                </div>
+            </div>
+        </section>
+    </main>
+<!-- Footer -->
+
+<script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+       // DOM Loaded
+       {% block domready %}
+
+       {% endblock %}
+    });
+
+    function toggleNavbar(collapseID) {
+        document.getElementById(collapseID).classList.toggle("hidden");
+        document.getElementById(collapseID).classList.toggle("block");
+    }
+</script>
+</body>
+</html>
+

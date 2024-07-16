@@ -11,9 +11,9 @@
 ``
 
 ```bash
-    ./tailwindcss -i ./core/static/css/tailwind.css -o ./core/static/css/style.css --watch
+    ./tailwindcss -i ./static/css/tailwind.css -o ./static/css/style.css --watch
 ````
 
 ```bash
-    ./tailwindcss -i ./core/static/css/tailwind.css -o ./core/static/css/style.css --minify
+    ./tailwindcss -i ./static/css/tailwind.css -o ./static/css/style.css --minify
 ```
