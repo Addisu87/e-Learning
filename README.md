@@ -1,10 +1,19 @@
 # e-Learning
 
 ## Start your Tailwind watcher
-```bash 
-./tailwindcss -i ./core/static/css/tailwind.css -o ./core/static/css/style.css --watch
+
+```bash
+    source eduenv/bin/activate
 ```
 
-```bash 
-./tailwindcss -i ./core/static/css/tailwind.css -o ./core/static/css/style.css --minify
+````bash
+    python manage.py runserver
+``
+
+```bash
+    ./tailwindcss -i ./core/static/css/tailwind.css -o ./core/static/css/style.css --watch
+````
+
+```bash
+    ./tailwindcss -i ./core/static/css/tailwind.css -o ./core/static/css/style.css --minify
 ```
