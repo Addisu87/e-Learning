@@ -1,19 +1,58 @@
-from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.list import ListView
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin, PermissionRequiredMixin
+)
+
+from .models import Course
+from .forms import CourseForm
 
 
-def home(request):
-    photo_data = {
-        'photo_1': 'https://picsum.photos/seed/1/300/200',
-        'photo_2': 'https://picsum.photos/seed/2/300/400',
-        'photo_3': 'https://picsum.photos/seed/3/300/300',
-        'photo_4': 'https://picsum.photos/seed/4/300/300',
-        'photo_5': 'https://picsum.photos/seed/5/300/300',
-        'photo_6': 'https://picsum.photos/seed/6/300/300',
-        'photo_7': 'https://picsum.photos/seed/7/300/400',
-        'photo_8': 'https://picsum.photos/seed/8/300/300',
-        'photo_9': 'https://picsum.photos/seed/9/300/200',
-        'photo_10': 'https://picsum.photos/seed/10/300/100',
-        'photo_11': 'https://picsum.photos/seed/11/300/400',
-        'photo_12': 'https://picsum.photos/seed/12/300/400',
-    }
-    return render(request, 'home.html', photo_data)
+class ManageCourseListView(ListView):
+    model = Course
+    template_name = 'courses/manage/course/list.html'
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(owner=self.request.user)
+
+
+class OwnerMixin:
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(owner=self.request.user)
+
+
+class OwnerEditMixin:
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
+
+class OwnerCourseMixin(OwnerMixin, LoginRequiredMixin, PermissionRequiredMixin):
+    model = Course
+    form_class = CourseForm
+    success_url = reverse_lazy('manage_course_list')
+
+
+class OwnerCourseEditMixin(OwnerCourseMixin, OwnerEditMixin):
+    template_name = 'courses/manage/course/form.html'
+
+
+class ManageCourseListView(OwnerCourseMixin, ListView):
+    template_name = 'courses/manage/course/list.html'
+    permission_required = 'courses.view_course'
+
+
+class CourseCreateView(OwnerCourseEditMixin, CreateView):
+    permission_required = 'courses.add_course'
+
+
+class CourseUpdateView(OwnerCourseEditMixin, UpdateView):
+    permission_required = 'courses.change_course'
+
+
+class CourseDeleteView(OwnerCourseMixin, DeleteView):
+    template_name = 'courses/manage/course/delete.html'
+    permission_required = 'courses.delete_course'

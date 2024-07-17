@@ -1,89 +1,77 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %}Log-in{% endblock %}
 
 {% block content %}
-<div class="w-full lg:w-4/12 px-4">
-    <div
-      class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-200 border-0 drop-shadow-md"
-    >
+<div class="w-96 mx-auto px-4">
+    <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-200 border-0 drop-shadow-md">
       <div class="rounded-t mb-0 px-6 py-6">
         <div class="text-center mb-3">
-          <h6 class="text-gray-600 text-sm font-bold">
-            Sign in with
-          </h6>
+          <h6 class="text-gray-600 text-sm font-bold">Sign in with</h6>
         </div>
         <div class="btn-wrapper text-center">
-          <button
-            class="bg-white active:bg-gray-100 text-gray-800 px-4 py-2 rounded outline-none focus:outline-none mr-2 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs"
-            type="button"
-            style="transition: all 0.15s ease 0s;"
-          >
-          <i class="fa-brands fa-github"></i> Github</button
-          >
-          <button
-            class="bg-white active:bg-gray-100 text-gray-800 px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs"
-            type="button"
-            style="transition: all 0.15s ease 0s;"
-          >
-          <i class="fa-brands fa-google"></i> Google
+          <button class="bg-white active:bg-gray-100 text-gray-800 px-4 py-2 rounded outline-none focus:outline-none mr-2 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs" type="button" style="transition: all 0.15s ease 0s;">
+            <img src="{% static 'img/github.svg' %}" alt="github" class="w-4 h-4 rounded-full"> Github
+          </button>
+          <button class="bg-white active:bg-gray-100 text-gray-800 px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs" type="button" style="transition: all 0.15s ease 0s;">
+            <img src="{% static 'img/google.svg' %}" alt="google" class="w-4 h-4 rounded-full"> Google
           </button>
         </div>
         <hr class="mt-6 border-b-1 border-gray-400" />
       </div>
 
-        <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
-
-            <div class="mb-4">
-                {% if form.errors %}
-                        <p class="text-red-600 text-center">Your username and password didn't match. Please try again.</p>
-                {% else %}
-                <div class="text-gray-500 text-center mb-3 font-bold">
-                    <small> Or sign in with credentials</small>
-                </div>
-                {% endif %}
+      <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
+        <div class="mb-4">
+          {% if form.errors %}
+            <p class="text-red-600 text-center">Your username and password didn't match. Please try again.</p>
+          {% else %}
+            <div class="text-gray-500 text-center mb-3 font-bold">
+              <small>Or sign in with credentials</small>
             </div>
-
-            <form id="login-form" action="{% url 'login' %}" method="post" class="">
-                {% csrf_token %}
-                <input type="hidden" name="next" value="{{ next }}" />
-
-                <div class="space-y-6">
-                    <div class="relative mb-4">
-                        <label for="id_username" class="text-gray-800 text-sm mb-2 block">Username</label>
-                        <div class="flex items-center border border-gray-300 rounded-md overflow-hidden">
-                            <input id="id_username" name="username" type="text" class="text-gray-800 bg-white w-full text-sm px-4 py-3 outline-none" placeholder="Enter username" required>
-                            <span class="px-3 text-gray-500"><i class="fas fa-user"></i></span>
-                        </div>
-                        {% if form.username.errors %}
-                            <p class="text-red-600 text-sm mt-1">{{ form.username.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-                    <div class="relative mb-4">
-                        <label class="text-gray-800 text-sm mb-2 block">Password</label>
-                        <div class="flex items-center border border-gray-300 rounded-md overflow-hidden">
-                            <input name="password" type="password" class="text-gray-800 bg-white w-full text-sm px-4 py-3 outline-none" placeholder="Enter password" required>
-                            <span class="px-3 text-gray-500"><i class="fas fa-lock"></i></span>
-                        </div>
-                        {% if form.password.errors %}
-                            <p class="text-red-600 text-sm mt-1">{{ form.password.errors.0 }}</p>
-                        {% endif %}
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                        <label for="remember-me" class="text-gray-800 ml-3 block text-sm">
-                            I accept the <a href="#" class="text-blue-600 font-semibold hover:underline ml-1">Terms and Conditions</a>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="mt-6">
-                    <button type="submit" class="w-full py-3 px-4 text-sm tracking-wider font-semibold rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">Sign in</button>
-                </div>
-                <p class="text-gray-800 text-sm mt-6 text-center">Don't have an account? <a href="#" class="text-blue-600 font-semibold hover:underline ml-1">Register here</a></p>
-            </form>
+          {% endif %}
         </div>
-    </div>
 
-    
+        <form id="login-form" action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+          <input type="hidden" name="next" value="{{ next }}" />
+
+          <div class="space-y-6">
+            <div class="relative mb-4">
+              <label for="id_username" class="text-gray-800 text-sm mb-2 block">Username</label>
+              <div class="flex items-center border border-gray-200 rounded-md overflow-hidden">
+                <input id="id_username" name="username" type="text" class="text-gray-800 bg-white w-full text-sm px-4 py-3 outline-none" placeholder="Enter username" required>
+                <span class="px-3 text-gray-500"><i class="fas fa-user"></i></span>
+              </div>
+              {% if form.username.errors %}
+                <p class="text-red-600 text-sm mt-1">{{ form.username.errors.0 }}</p>
+              {% endif %}
+            </div>
+            <div class="relative mb-4">
+              <label for="id_password" class="text-gray-800 text-sm mb-2 block">Password</label>
+              <div class="flex items-center border border-gray-200 rounded-md overflow-hidden">
+                <input id="id_password" name="password" type="password" class="text-gray-800 bg-white w-full text-sm px-4 py-3 outline-none" placeholder="Enter password" required>
+                <span class="px-3 text-gray-500"><i class="fas fa-lock"></i></span>
+              </div>
+              {% if form.password.errors %}
+                <p class="text-red-600 text-sm mt-1">{{ form.password.errors.0 }}</p>
+              {% endif %}
+            </div>
+            <div class="flex items-center space-x-2">
+              <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+              <label for="remember-me" class="text-gray-800 ml-3 block text-sm">
+                I accept the <a href="#" class="text-blue-600 font-semibold hover:underline ml-1">Terms and Conditions</a>
+              </label>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <button type="submit" class="w-full py-3 px-4 text-sm tracking-wider font-semibold rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">Sign in</button>
+          </div>
+          <p class="text-gray-800 text-sm mt-6 text-center">Don't have an account? <a href="#" class="text-blue-600 font-semibold hover:underline ml-1">Register here</a></p>
+        </form>
+      </div>
+    </div>
+</div>
 {% endblock %}

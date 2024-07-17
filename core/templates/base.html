@@ -11,73 +11,76 @@
     <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/gh/creativetimofficial/tailwind-starter-kit/compiled-tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.css" rel="stylesheet" />
 </head>
-<body class="text-gray-800 antialiased">
+<body class="bg-green-50">
+
     <!-- Navigation -->
-    <nav class="top-0 absolute z-50 w-full flex items-center justify-between px-2 py-3 bg-blue-600 text-white">
-        <div class="container px-4 mx-auto flex items-center justify-between">
-            <a href="/">
-                <div class="flex items-center justify-center space-x-4" >
-                    <img src="{% static 'img/education.png' %}" alt="education logo" class="h-8 w-8">
-                        <span class="text-sm font-bold leading-relaxed py-2 whitespace-nowrap uppercase">Educa</span>
-                    </div>
+    <nav class="bg-green-200 border-gray-200 dark:bg-gray-900">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+            <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
+                <img src="{% static 'img/education.png' %}" alt="education logo" class="h-8 w-8">
+                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Educa</span>
             </a>
-            <div class="flex lg:hidden">
-                <button class="text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block focus:outline-none" type="button" onclick="toggleNavbar('example-collapse-navbar')">
-                    <i class="fas fa-bars"></i>
+            <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+                <button type="button" class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
+                    <span class="sr-only">Open user menu</span>
+                    <img src="{% static 'img/profile-image.jpg' %}" alt="user photo" class="w-8 h-8 rounded-full">
+                </button>
+                <!-- Dropdown menu -->
+                <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
+                    <div class="px-4 py-3">
+                        <span class="block text-sm text-gray-900 dark:text-white">Addisu Haile</span>
+                        <span class="block text-sm  text-gray-500 truncate dark:text-gray-400">addisu@flowbite.com</span>
+                    </div>
+                    <ul class="py-2" aria-labelledby="user-menu-button">
+                        <li>
+                            {% if request.user.is_authenticated %}
+                                <form action="{% url 'logout' %}" method="post" class="flex items-center">
+                                    {% csrf_token %}
+                                    <button type="submit" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-red-600 dark:text-gray-200 dark:hover:text-white">Sign out</button>
+                                </form>
+                            {% else %}
+                                <a href="{% url 'login' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign in</a>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+                <button data-collapse-toggle="navbar-user" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-user" aria-expanded="false">
+                    <span class="sr-only">Open main menu</span>
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+                    </svg>
                 </button>
             </div>
-            <div class="hidden lg:flex flex-grow items-center justify-end" id="example-collapse-navbar">
-      
-                <ul class="flex flex-col lg:flex-row list-none lg:ml-auto">
-                    <li class="flex items-center">
-                        <a class="lg:text-white lg:hover:text-gray-300 text-gray-800 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold" href="#pablo">
-                            <i class="fab fa-facebook text-lg leading-lg mr-2"></i>
-                            <span class="text-base">Courses</span>
-                        </a>
+            <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
+                <ul class="flex flex-col font-medium p-4 md:p-0 mt-4 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                  
+                    <li>
+                        <a href="/" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Home</a>
+                    </li>
+                    <li>
+                        <a href="/about" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">About</a>
+                    </li>
+                    <li>
+                        <a href="/services" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Services</a>
+                    </li>
+                    <li>
+                        <a href="/contact" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Contact</a>
                     </li>
                 </ul>
-
-                {% if request.user.is_authenticated %}
-                    <form action="{% url "logout" %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none">Sign out</button>
-                    </form>
-                {% else %}
-                    <a href="{% url "login" %}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none">Sign in</a>
-                {% endif %}
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="flex flex-col justify-center h-screen p-4">
-        <section class="absolute w-full h-full">
-            <div class="container mx-auto px-4 h-full">
-                <div class="flex content-center items-center justify-center h-full">
-                        {% block content %}
+    <!-- End of Navigation -->
 
-                        {% endblock %}
-                </div>
-            </div>
-        </section>
+    <main class="container mx-auto mt-4">
+        {% block content %}
+
+        {% endblock %}
     </main>
-<!-- Footer -->
 
-<script>
-    document.addEventListener("DOMContentLoaded", (event) => {
-       // DOM Loaded
-       {% block domready %}
-
-       {% endblock %}
-    });
-
-    function toggleNavbar(collapseID) {
-        document.getElementById(collapseID).classList.toggle("hidden");
-        document.getElementById(collapseID).classList.toggle("block");
-    }
-</script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js"></script>
 </body>
 </html>
-
