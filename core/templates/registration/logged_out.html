@@ -3,12 +3,17 @@
 {% block title %}Logged out{% endblock %}
 
 {% block content %}
-  <h1>Logged out</h1>
-  <div class="">
-        <p>
-        You have been successfully logged out.
+<div class="container mx-auto mt-8 px-4 max-w-xl">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">Logged out</h1>
 
-        You can <a href="{% url "login" %}">log-in again</a>.
-        </p> 
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <p class="text-lg text-gray-700">
+            You have been successfully logged out.
+        </p>
+
+        <p class="mt-4">
+            You can <a href="{% url 'login' %}" class="text-blue-600 hover:underline">log in again</a>.
+        </p>
     </div>
+</div>
 {% endblock %}
