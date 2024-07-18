@@ -8,4 +8,23 @@ urlpatterns = [
     path('create/', views.CourseCreateView.as_view(), name='course_create'),
     path('<pk>/edit/', views.CourseUpdateView.as_view(), name='course_edit'),
     path('<pk>/delete/', views.CourseDeleteView.as_view(), name='course_delete'),
+
+    # For updating existing model
+    path('<pk>/module/', views.CourseModuleUpdateView.as_view(),
+         name='course_module_update'),
+    # For creating new content
+    path('module/<int:module_id>/content/<model_name>/create/',
+         views.ContentCreateUpdateView.as_view(), name='module_content_create'),
+
+    # For updating existing content
+    path('module/<int:module_id>/content/<model_name>/<id>/',
+         views.ContentCreateUpdateView.as_view(), name='module_content_update'),
+
+    # For delete existing content
+    path('content/<int:id>/delete/', views.ContentDeleteView.as_view(),
+         name='module_content_delete'),
+
+    # For
+    path('module/<int:module_id>/', views.ModuleContentListView.as_view(),
+         name='module_content_list'),
 ]
