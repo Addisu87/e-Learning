@@ -1,26 +1,18 @@
-from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from django.views.generic.list import ListView
 from django.contrib.auth.mixins import (
     LoginRequiredMixin, PermissionRequiredMixin
 )
+from braces.views import CsrfExemptMixin, JsonRequestResponseMixin
+from django.forms.models import modelform_factory
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic.base import TemplateResponseMixin, View
+from django.urls import reverse_lazy
 from django.apps import apps
 from django.http import Http404
-from django.forms.models import modelform_factory
+from django.views.generic.base import TemplateResponseMixin, View
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.list import ListView
 
-from core.courses.models import Course, Module, Content
+from .models import Course, Module, Content
 from .forms import CourseForm, ModuleFormSet
-
-
-class ManageCourseListView(ListView):
-    model = Course
-    template_name = 'courses/manage/course/list.html'
-
-    def get_queryset(self):
-        qs = super().get_queryset()
-        return qs.filter(owner=self.request.user)
 
 
 class OwnerMixin:
@@ -99,10 +91,9 @@ class ContentCreateUpdateView(TemplateResponseMixin, View):
     template_name = 'courses/manage/content/form.html'
 
     def get_model(self, model_name):
-        # Ensure model_name is capitalized correctly
         if model_name in ['text', 'video', 'image', 'file']:
             try:
-                return apps.get_model(app_label='courses', model_name=model_name.capitalize())
+                return apps.get_model(app_label='courses', model_name=model_name)
             except LookupError:
                 return None
         return None
@@ -116,7 +107,8 @@ class ContentCreateUpdateView(TemplateResponseMixin, View):
     def dispatch(self, request, module_id, model_name, id=None):
         # Retrieve the module and model instance based on the parameters
         self.module = get_object_or_404(
-            Module, id=module_id, course__owner=request.user)
+            Module, id=module_id, course__owner=request.user
+        )
         self.model = self.get_model(model_name)
         if not self.model:
             raise Http404(f"No model found for '{model_name}'")
@@ -135,8 +127,12 @@ class ContentCreateUpdateView(TemplateResponseMixin, View):
         # Handle POST request to process form submission
         if self.model is None:
             return self.render_to_response({'error': f"Model '{model_name}' not found."})
-        form = self.get_form(self.model, instance=self.obj,
-                             data=request.POST, files=request.FILES)
+        form = self.get_form(
+            self.model,
+            instance=self.obj,
+            data=request.POST,
+            files=request.FILES
+        )
         if form.is_valid():
             obj = form.save(commit=False)
             obj.owner = request.user
@@ -169,3 +165,21 @@ class ModuleContentListView(TemplateResponseMixin, View):
             Module, id=module_id, course__owner=request.user
         )
         return self.render_to_response({'module': module})
+
+
+class ModuleOrderView(CsrfExemptMixin, JsonRequestResponseMixin, View):
+    def post(self, request):
+        for id, order in self.request_json.items():
+            Module.objects.filter(
+                id=id, course__owner=request.user
+            ).update(order=order)
+        return self.render_json_response({'saved': 'OK'})
+
+
+class ContentOrderView(CsrfExemptMixin, JsonRequestResponseMixin, View):
+    def post(self, request):
+        for id, order in self.request_json.items():
+            Content.objects.filter(
+                id=id, module__course__owner=request.user
+            ).update(order=order)
+        return self.render_json_response({'saved': 'OK'})

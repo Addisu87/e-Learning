@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %} Delete course "{{ course.title }}" {% endblock %}
+{% block title %} Delete course {% endblock %}
 
 {% block content %}
 <div class="container mx-auto mt-8 px-4 max-w-xl">
@@ -9,7 +9,7 @@
     </h1>
 
     <div class="bg-white shadow-md rounded-lg p-6">
-        <form action="{% url 'course_delete' course.pk %}" method="post">
+        <form action="" method="post">
             {% csrf_token %}
             <div class="space-y-4">
                 <p class="text-lg text-gray-700">Are you sure you want to delete "{{ course }}"?</p>

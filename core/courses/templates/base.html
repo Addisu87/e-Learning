@@ -81,6 +81,20 @@
         {% endblock %}
     </main>
 
+    
+   {% block  include_js %}
+
+   {% endblock  %}
+
+   <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // DOM Loaded
+            {% block domready %}
+
+            {% endblock %}
+        })
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js"></script>
 </body>
 </html>

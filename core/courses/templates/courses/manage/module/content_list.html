@@ -3,20 +3,19 @@
 {% load course %}
 
 {% block title %}
-    Module {{module.order|add:1}}: {{ module.title }}
+    Module {{ module.order|add:1 }}: {{ module.title }}
 {% endblock %}
 
 {% block content %}
 
 {% with course=module.course %}
-<h1 class="text-2xl font-bold text-center mb-6 bg-gray-200 p-4 rounded-lg hover:bg-gray-300 ">Course "{{ course.title }}"</h1>
-
-<div class="flex flex-col lg:flex-row lg:space-x-8">
-    <div class="w-1/3 mb-8 lg:mb-0 bg-gray-900 text-white p-6 rounded-lg shadow-md">
+<div class="min-h-screen flex flex-col lg:flex-row">
+    <!-- Sidebar -->
+    <div class="w-full lg:w-96 bg-gray-900 text-white p-6 rounded-lg shadow-md lg:h-screen lg:sticky lg:top-0">
         <h3 class="text-xl font-semibold mb-4">Modules</h3>
         <ul id="modules" class="space-y-2">
             {% for mdl in course.modules.all %}
-                <li data-id="{{mdl.id}}" {% if mdl == module %} class="selected"{% endif %} class="p-4 bg-gray-800 rounded-lg hover:bg-gray-700 {% if mdl == module %}bg-gray-700{% endif %}">
+                <li data-id="{{ mdl.id }}" class="p-4 bg-gray-800 rounded-lg hover:bg-gray-700 {% if mdl == module %}bg-gray-700{% endif %}">
                     <a href="{% url 'module_content_list' mdl.id %}" class="block text-lg font-medium text-gray-300 {% if mdl == module %}text-white{% endif %}">
                         Module <span>{{ mdl.order|add:1 }}</span>
                         <br>
@@ -28,11 +27,16 @@
             {% endfor %}
         </ul>
         <p class="mt-6">
-            <a href="{% url 'course_module_update' course.id %}" class="block w-full text-center bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300">Edit modules</a>
+            <a href="{% url 'course_module_update' course.id %}" class="block w-full text-center bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300">
+                Edit modules
+            </a>
         </p>
     </div>
 
-    <div class="w-2/3">
+    <!-- Main content -->
+    <div class="w-full lg:flex-1 p-8 overflow-y-auto lg:h-[calc(100vh-6rem)]">
+        <h1 class="text-2xl font-bold text-center mb-6 bg-gray-200 p-4 rounded-lg hover:bg-gray-300">Course "{{ course.title }}"</h1>
+
         <h2 class="text-xl font-semibold mb-4">Module {{ module.order|add:1 }}: {{ module.title }}</h2>
         <h3 class="text-lg font-medium mb-4">Module contents:</h3>
 
@@ -71,7 +75,63 @@
         </ul>
     </div>
 </div>
-
 {% endwith %}
 
 {% endblock %}
+
+
+{% block include_js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.14.0/html5sortable.min.js"></script>
+{% endblock  %}
+
+{% block domready %}
+    var options = {
+        method: 'POST',
+        mode: 'same-origin'
+    }
+    const moduleOrderUrl = '{% url 'module_order' %}';
+
+    sortable('#modules', {
+        forcePlaceholderSize: true,
+        placeholderClass: 'placeholder'
+    })[0].addEventListener('sortupdate', function(e) {
+
+        modulesOrder = {};
+        var modules = document.querySelectorAll('#modules li');
+        modules.forEach(function(module, index) {
+            // update module index
+            moduleOrder[module.dataset.id] = index;
+            // update index in HTML element
+            module.querySelector('.order').innerHTML = index + 1;
+        });
+
+        // add new order to the HTTP request options 
+        options['body'] = JSON.stringify(moduleOrder);
+
+        // send HTTP request
+        fetch(moduleOrderUrl, options)
+    });
+
+
+    const contentOrderUrl = '{% url 'content_order' %}';
+
+    sortable('#module-contents', {
+        forcePlaceholderSize: true, 
+        placeholderClass: 'placeholder'
+    })[0].addEventListener('sortupdate', function(e) {
+
+        contentOrder = {};
+        var contents = document.querySelectorAll('#module-contents div');
+        contents.forEach(function (content, index) {
+            //update content index
+            contentOrder[content.dataset.id] = index;
+        });
+
+        // add new order to the HTTP request options
+        options['body'] = JSON.stringify(contentOrder);
+
+        // send HTTP request
+        fetch(contentOrderUrl, options)
+    });
+    
+{% endblock  %}
