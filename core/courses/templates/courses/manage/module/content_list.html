@@ -7,76 +7,74 @@
 {% endblock %}
 
 {% block content %}
-
-{% with course=module.course %}
-<div class="min-h-screen flex flex-col lg:flex-row">
-    <!-- Sidebar -->
-    <div class="w-full lg:w-96 bg-gray-900 text-white p-6 rounded-lg shadow-md lg:h-screen lg:sticky lg:top-0">
-        <h3 class="text-xl font-semibold mb-4">Modules</h3>
-        <ul id="modules" class="space-y-2">
-            {% for mdl in course.modules.all %}
-                <li data-id="{{ mdl.id }}" class="p-4 bg-gray-800 rounded-lg hover:bg-gray-700 {% if mdl == module %}bg-gray-700{% endif %}">
-                    <a href="{% url 'module_content_list' mdl.id %}" class="block text-lg font-medium text-gray-300 {% if mdl == module %}text-white{% endif %}">
-                        Module <span>{{ mdl.order|add:1 }}</span>
-                        <br>
-                        {{ mdl.title }}
+    {% with course=module.course %}
+        <div class="min-h-screen flex flex-col lg:flex-row">
+            <!-- Sidebar -->
+            <div class="w-full lg:w-96 bg-gray-900 text-white p-6 rounded-lg shadow-md lg:h-screen lg:sticky lg:top-0">
+                <h3 class="text-xl font-semibold mb-4">Modules</h3>
+                <ul id="modules" class="space-y-2">
+                    {% for mdl in course.modules.all %}
+                        <li data-id="{{ mdl.id }}" class="p-4 bg-gray-800 rounded-lg hover:bg-gray-700 {% if mdl == module %}bg-gray-700{% endif %}">
+                            <a href="{% url 'module_content_list' mdl.id %}" class="block text-lg font-medium text-gray-300 {% if mdl == module %}text-white{% endif %}">
+                                Module <span>{{ mdl.order|add:1 }}</span>
+                                <br>
+                                {{ mdl.title }}
+                            </a>
+                        </li>
+                    {% empty %}
+                        <li class="text-gray-400">No modules yet.</li>
+                    {% endfor %}
+                </ul>
+                <p class="mt-6">
+                    <a href="{% url 'course_module_update' course.id %}" class="block w-full text-center bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300">
+                        Edit modules
                     </a>
-                </li>
-            {% empty %}
-                <li class="text-gray-400">No modules yet.</li>
-            {% endfor %}
-        </ul>
-        <p class="mt-6">
-            <a href="{% url 'course_module_update' course.id %}" class="block w-full text-center bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300">
-                Edit modules
-            </a>
-        </p>
-    </div>
+                </p>
+            </div>
 
-    <!-- Main content -->
-    <div class="w-full lg:flex-1 p-8 overflow-y-auto lg:h-[calc(100vh-6rem)]">
-        <h1 class="text-2xl font-bold text-center mb-6 bg-gray-200 p-4 rounded-lg hover:bg-gray-300">Course "{{ course.title }}"</h1>
+            <!-- Main content -->
+            <div class="w-full lg:flex-1 p-8 overflow-y-auto lg:h-[calc(100vh-6rem)]">
+                <h1 class="text-2xl font-bold text-center mb-6 bg-gray-200 p-4 rounded-lg hover:bg-gray-300">Course "{{ course.title }}"</h1>
 
-        <h2 class="text-xl font-semibold mb-4">Module {{ module.order|add:1 }}: {{ module.title }}</h2>
-        <h3 class="text-lg font-medium mb-4">Module contents:</h3>
+                <h2 class="text-xl font-semibold mb-4">Module {{ module.order|add:1 }}: {{ module.title }}</h2>
+                <h3 class="text-lg font-medium mb-4">Module contents:</h3>
 
-        <div id="module-contents" class="space-y-4">
-            {% for content in module.contents.all %}
-                <div class="p-6 bg-white rounded-lg shadow-md">
-                    {% with item=content.id %}
-                    <p>{{ item }} ({{ item|model_name }})</p>
-                    <a href="{% url "module_content_update" module.id item|model_name item.id %}" class="text-blue-500 hover:underline">Edit</a>
+                <div id="module-contents" class="space-y-4">
+                    {% for content in module.contents.all %}
+                        <div data-id="{{ content.id }}" class="p-6 bg-white rounded-lg shadow-md">
+                            {% with item=content.item %}
+                            <p>{{ item }} ({{ item|model_name }})</p>
+                            <a href="{% url "module_content_update" module.id item|model_name item.id %}" class="text-blue-500 hover:underline">Edit</a>
 
-                    <form action="{% url "module_content_delete" content.id %}" method="post" class="inline-block ml-4">
-                        {% csrf_token %}
-                        <button type="submit" class="text-red-500 hover:underline cursor-pointer">Delete</button>
-                    </form>
-                    {% endwith %}
+                            <form action="{% url "module_content_delete" content.id %}" method="post" class="inline-block ml-4">
+                                {% csrf_token %}
+                                <button type="submit" class="text-red-500 hover:underline cursor-pointer">Delete</button>
+                            </form>
+                            {% endwith %}
+                        </div>
+                    {% empty %}
+                        <p class="text-gray-500">This module has no contents yet.</p>
+                    {% endfor %}
                 </div>
-            {% empty %}
-                <p class="text-gray-500">This module has no contents yet.</p>
-            {% endfor %}
+
+                <h3 class="text-lg font-medium mt-8 mb-4">Add new content:</h3>
+                <ul class="flex flex-wrap space-x-4">
+                    <li>
+                        <a href="{% url "module_content_create" module.id "text" %}" class="text-blue-500 hover:underline">Text</a>
+                    </li>
+                    <li>
+                        <a href="{% url "module_content_create" module.id "image" %}" class="text-blue-500 hover:underline">Image</a>
+                    </li>
+                    <li>
+                        <a href="{% url "module_content_create" module.id "video" %}" class="text-blue-500 hover:underline">Video</a>
+                    </li>
+                    <li>
+                        <a href="{% url "module_content_create" module.id "file" %}" class="text-blue-500 hover:underline">File</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-
-        <h3 class="text-lg font-medium mt-8 mb-4">Add new content:</h3>
-        <ul class="flex flex-wrap space-x-4">
-            <li>
-                <a href="{% url "module_content_create" module.id "text" %}" class="text-blue-500 hover:underline">Text</a>
-            </li>
-            <li>
-                <a href="{% url "module_content_create" module.id "image" %}" class="text-blue-500 hover:underline">Image</a>
-            </li>
-            <li>
-                <a href="{% url "module_content_create" module.id "video" %}" class="text-blue-500 hover:underline">Video</a>
-            </li>
-            <li>
-                <a href="{% url "module_content_create" module.id "file" %}" class="text-blue-500 hover:underline">File</a>
-            </li>
-        </ul>
-    </div>
-</div>
-{% endwith %}
-
+    {% endwith %}
 {% endblock %}
 
 
@@ -133,5 +131,5 @@
         // send HTTP request
         fetch(contentOrderUrl, options)
     });
-    
+
 {% endblock  %}
