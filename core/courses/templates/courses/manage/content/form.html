@@ -19,7 +19,7 @@
     </h1>
 
     <div class="bg-white shadow-md rounded-lg p-6">
-        <h2 class="text-xl font-semibold text-gray-700 mb-4">Content Info</h2>
+        <h2 class="text-xl font-semibold text-gray-700 mb-4">Course Info</h2>
         {% if error %}
             <div class="bg-red-100 text-red-700 p-4 rounded-md mb-4">
                 {{ error }}
@@ -27,7 +27,21 @@
         {% endif %}
         <form action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.as_p }}
+            {{ form.non_field_errors }}
+            {% for field in form %}
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <p class="text-gray-600 text-xs italic">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <p class="text-red-500 text-xs italic">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
             <div class="mt-6 text-right">
                 <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200">
                     Save content

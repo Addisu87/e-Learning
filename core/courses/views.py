@@ -93,7 +93,7 @@ class ContentCreateUpdateView(TemplateResponseMixin, View):
     def get_model(self, model_name):
         if model_name in ['text', 'video', 'image', 'file']:
             try:
-                return apps.get_model(app_label='courses', model_name=model_name)
+                return apps.get_model(app_label='core_courses', model_name=model_name)
             except LookupError:
                 return None
         return None
