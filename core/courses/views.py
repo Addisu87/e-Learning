@@ -7,11 +7,13 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.apps import apps
 from django.http import Http404
+from django.db.models import Count
 from django.views.generic.base import TemplateResponseMixin, View
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 
-from .models import Course, Module, Content
+from .models import Course, Module, Content, Subject
 from .forms import CourseForm, ModuleFormSet
 
 
@@ -101,7 +103,9 @@ class ContentCreateUpdateView(TemplateResponseMixin, View):
     def get_form(self, model, *args, **kwargs):
         # Generate a form dynamically for the specified model
         Form = modelform_factory(
-            model, exclude=['owner', 'order', 'created_at', 'updated_at'])
+            model,
+            exclude=['owner', 'order', 'created_at', 'updated_at']
+        )
         return Form(*args, **kwargs)
 
     def dispatch(self, request, module_id, model_name, id=None):
@@ -183,3 +187,34 @@ class ContentOrderView(CsrfExemptMixin, JsonRequestResponseMixin, View):
                 id=id, module__course__owner=request.user
             ).update(order=order)
         return self.render_json_response({'saved': 'OK'})
+
+
+class CourseListView(TemplateResponseMixin, View):
+    #  the courses list available on the platform for enrolled students
+    model = Course
+    template_name = 'courses/course/list.html'
+
+    def get(self, request, subject=None):
+        subjects = Subject.objects.annotate(
+            total_courses=Count('courses')
+        )
+        courses = Course.objects.annotate(
+            total_modules=Count('modules')
+        )
+        if subject:
+            subject = get_object_or_404(Subject, slug=subject)
+            courses = courses.filter(subject=subject)
+
+        return self.render_to_response(
+            {
+                'subjects': subjects,
+                'subject': subject,
+                'courses': courses
+            }
+        )
+
+
+class CourseDetailView(DetailView):
+    # a detail view for displaying a single course overview
+    model = Course
+    template_name = 'courses/course/detail.html'

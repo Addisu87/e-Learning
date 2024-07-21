@@ -34,4 +34,13 @@ urlpatterns = [
 
     # For content drag and drop view
     path('content/order/', views.ContentOrderView.as_view(), name="content_order"),
+
+
+    # For displaying all courses for a subject
+    path('subject/<slug:subject>/',  views.CourseListView.as_view(),
+         name='course_list_subject'),
+
+    # For displaying a single course overview
+
+    path('<slug:slug>/', views.CourseDetailView.as_view(), name='course_detail'),
 ]
