@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'core',
     'core.courses',
     'fontawesomefree',
-    'core.students'
+    'core.students',
 ]
 
 MIDDLEWARE = [

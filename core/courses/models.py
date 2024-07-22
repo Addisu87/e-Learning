@@ -34,6 +34,8 @@ class Course(models.Model):
     overview = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    students = models.ManyToManyField(
+        User, related_name='courses_joined', blank=True)
 
     class Meta:
         ordering = ['-created_at']

@@ -27,9 +27,10 @@ urlpatterns = [
     path('accounts/login/', auth_views.LoginView.as_view(), name='login'),
     path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('admin/', admin.site.urls),
-    path('course/', include('core.courses.urls')),
-    path('', CourseListView.as_view(), name="course_list")
 
+    path('course/', include('core.courses.urls')),
+    path('', CourseListView.as_view(), name="course_list"),
+    path('students/', include('core.students.urls')),
 ]
 
 # the static() helper function to serve media files with the
