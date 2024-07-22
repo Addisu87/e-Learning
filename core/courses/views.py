@@ -199,9 +199,11 @@ class CourseListView(TemplateResponseMixin, View):
         subjects = Subject.objects.annotate(
             total_courses=Count('courses')
         )
+
         courses = Course.objects.annotate(
             total_modules=Count('modules')
         )
+        
         if subject:
             subject = get_object_or_404(Subject, slug=subject)
             courses = courses.filter(subject=subject)

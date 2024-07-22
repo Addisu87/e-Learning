@@ -1,6 +1,5 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
-from django.http import HttpRequest, HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -38,7 +37,7 @@ class StudentEnrollCourseView(LoginRequiredMixin, FormView):
 
     def get_success_url(self):
         return reverse_lazy(
-            'courses:course_detail', args=[self.course.id]
+            'student_course_detail', args=[self.course.id]
         )
 
 
@@ -51,7 +50,7 @@ class StudentCourseListView(LoginRequiredMixin, ListView):
         return qs.filter(students__in=[self.request.user])
 
 
-class StudentCourseDetailView(LoginRequiredMixin, ListView):
+class StudentCourseDetailView(LoginRequiredMixin, DetailView):
     model = Course
     template_name = 'students/course/detail.html'
 

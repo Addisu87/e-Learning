@@ -10,19 +10,19 @@
     {% with course=module.course %}
         <div class="min-h-screen flex flex-col lg:flex-row">
             <!-- Sidebar -->
-            <div class="w-full lg:w-96 bg-gray-900 text-white p-6 rounded-lg shadow-md lg:h-screen lg:sticky lg:top-0">
+            <div class="w-full lg:w-96 bg-gray-300 text-gray-800 p-6 rounded-lg shadow-md lg:h-screen lg:sticky lg:top-0">
                 <h3 class="text-xl font-semibold mb-4">Modules</h3>
                 <ul id="modules" class="space-y-2">
                     {% for mdl in course.modules.all %}
-                        <li data-id="{{ mdl.id }}" class="p-4 bg-gray-800 rounded-lg hover:bg-gray-700 {% if mdl == module %}bg-gray-700{% endif %}">
-                            <a href="{% url 'module_content_list' mdl.id %}" class="block text-lg font-medium text-gray-300 {% if mdl == module %}text-white{% endif %}">
+                        <li data-id="{{ mdl.id }}" class="p-4 bg-gray-400 rounded-lg hover:bg-gray-500 {% if mdl == module %}bg-gray-500{% endif %}">
+                            <a href="{% url 'module_content_list' mdl.id %}" class="block text-lg font-medium text-gray-900 {% if mdl == module %}text-gray-800{% endif %}">
                                 Module <span>{{ mdl.order|add:1 }}</span>
                                 <br>
                                 {{ mdl.title }}
                             </a>
                         </li>
                     {% empty %}
-                        <li class="text-gray-400">No modules yet.</li>
+                        <li class="text-gray-500">No modules yet.</li>
                     {% endfor %}
                 </ul>
                 <p class="mt-6">
@@ -77,10 +77,9 @@
     {% endwith %}
 {% endblock %}
 
-
 {% block include_js %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.14.0/html5sortable.min.js"></script>
-{% endblock  %}
+{% endblock %}
 
 {% block domready %}
     var options = {
@@ -110,7 +109,6 @@
         fetch(moduleOrderUrl, options)
     });
 
-
     const contentOrderUrl = '{% url 'content_order' %}';
 
     sortable('#module-contents', {
@@ -131,5 +129,4 @@
         // send HTTP request
         fetch(contentOrderUrl, options)
     });
-
-{% endblock  %}
+{% endblock %}
