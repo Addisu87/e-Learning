@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'fontawesomefree',
     'core.students',
     'embed_video',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -145,3 +146,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # displays the courses that the student is enrolled in
 LOGIN_REDIRECT_URL = reverse_lazy('student_course_list')
+
+
+REST_FRAMEWORK = {
+    # YOUR SETTINGS
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}

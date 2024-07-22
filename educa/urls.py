@@ -21,12 +21,21 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
 from core.courses.views import CourseListView
 
 urlpatterns = [
+    # API schema and documentation:
+    path('api/schema/', SpectacularAPIView.as_view(), name='api-schema'),
+    # Optional UI:
+    path('api/docs/',
+         SpectacularSwaggerView.as_view(url_name='api-schema'), name='api-docs'),
+
     path('accounts/login/', auth_views.LoginView.as_view(), name='login'),
     path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('admin/', admin.site.urls),
+
 
     path('course/', include('core.courses.urls')),
     path('', CourseListView.as_view(), name="course_list"),
