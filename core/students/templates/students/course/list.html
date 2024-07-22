@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6 text-gray-800 dark:text-white">My Courses</h1>
+    <div class="space-y-6">
+        {% for course in object_list %}
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">{{ course.title }}</h3>
+            <p class="text-gray-700 dark:text-gray-300">
+                <a href="{% url 'student_course_detail' course.id %}" class="text-blue-600 hover:underline dark:text-blue-400">
+                    Access contents
+                </a>
+            </p>
+        </div>
+        {% empty %}
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <p class="text-gray-700 dark:text-gray-300">
+                You are not enrolled in any courses yet. 
+                <a href="{% url 'course_list' %}" class="text-blue-600 hover:underline dark:text-blue-400">
+                    Browse courses
+                </a>
+                to enroll in a course.
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
