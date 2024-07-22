@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'core.courses',
-    'fontawesomefree'
+    'fontawesomefree',
+    'core.students'
 ]
 
 MIDDLEWARE = [
