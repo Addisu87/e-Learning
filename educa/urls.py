@@ -32,9 +32,11 @@ urlpatterns = [
     path('api/docs/',
          SpectacularSwaggerView.as_view(url_name='api-schema'), name='api-docs'),
 
+    path('admin/', admin.site.urls),
+    path('__debug__/', include('debug_toolbar.urls')),
+
     path('accounts/login/', auth_views.LoginView.as_view(), name='login'),
     path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('admin/', admin.site.urls),
 
 
     path('course/', include('core.courses.urls')),
