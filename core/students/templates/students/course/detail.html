@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load cache %}
+
 {% block content %}
 <div class="min-h-screen flex flex-col lg:flex-row">
     <!-- Sidebar -->
@@ -28,18 +30,20 @@
 
         <!-- Module Contents -->
         <div class="bg-white p-6 rounded-lg shadow-md">
-            {% for content in module.contents.all %}
-            {% with item=content.item %}
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold mb-4 text-gray-900">{{ item.title }}</h2>
-                <div class="text-gray-700">
-                    {{ item.render }}
-                </div>
-            </div>
-            {% endwith %}
-            {% empty %}
-            <p class="text-gray-600">No content available for this module.</p>
-            {% endfor %}
+            {% cache 600 module_contents module %}
+                {% for content in module.contents.all %}
+                    {% with item=content.item %}
+                        <div class="mb-6">
+                            <h2 class="text-xl font-semibold mb-4 text-gray-900">{{ item.title }}</h2>
+                            <div class="text-gray-700">
+                                {{ item.render }}
+                            </div>
+                        </div>
+                    {% endwith %}
+                {% empty %}
+                <p class="text-gray-600">No content available for this module.</p>
+                {% endfor %}
+            {% endcache %}
         </div>
     </div>
 </div>
