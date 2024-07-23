@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'embed_video',
     'drf_spectacular',
     'debug_toolbar',
+    'redisboard',
 ]
 
 MIDDLEWARE = [
@@ -158,8 +159,8 @@ REST_FRAMEWORK = {
 # Configure cache for the project
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
-        'LOCATION': '127.0.0.1:11211',
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379',
     }
 }
 
@@ -167,3 +168,8 @@ CACHES = {
 INTERNAL_IPS = [
     '127.0.0.1'
 ]
+
+
+CACHE_MIDDLEWARE_ALIAS = 'default'
+CACHE_MIDDLEWARE_SECONDS = 60 * 15  # 15 minutes
+CACHE_MIDDLEWARE_KEY_PREFIX = 'educa'
