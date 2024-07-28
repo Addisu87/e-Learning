@@ -41,7 +41,9 @@ urlpatterns = [
 
     path('course/', include('core.courses.urls')),
     path('', CourseListView.as_view(), name="course_list"),
-    path('students/', include('core.students.urls')),
+
+    path('students/', include('core.students.urls', namespace='students')),
+    path('api/', include('core.courses.api.urls', namespace='api')),
 ]
 
 # the static() helper function to serve media files with the
