@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'debug_toolbar',
     'redisboard',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -154,6 +155,9 @@ LOGIN_REDIRECT_URL = reverse_lazy('student_course_list')
 REST_FRAMEWORK = {
     # YOUR SETTINGS
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    ]
 }
 
 # Configure cache for the project
